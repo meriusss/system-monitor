@@ -13,7 +13,9 @@ NavigationLayout = sg.Frame(
             title = "",
             layout = [ButtonLayout],
             relief = "flat",
-            background_color = WindowBackgroundColor
+            background_color = WindowBackgroundColor,
+            size = (600, 50),
+            element_justification = "center"
             )
 
 layoutCPU = [
@@ -37,13 +39,29 @@ layoutNetwork = [
 ]
 
 layout = [
-    [NavigationLayout],
+    [
+        NavigationLayout
+    ],
 
     [
-    sg.Column(layoutCPU, key = 'CPUL'), 
-    sg.Column(layoutMemory, key = "MemoryL", visible = False), 
-    sg.Column(layoutGPU, key = "GPUL", visible = False), 
-    sg.Column(layoutStorage, key = "StorageL", visible = False), 
-    sg.Column(layoutNetwork, key = "NetworkL", visible = False)
+        sg.Column(layoutCPU, key = 'CPUL', size = (600, 475)), 
+        sg.Column(layoutMemory, key = "MemoryL", visible = False, size = (600, 475)), 
+        sg.Column(layoutGPU, key = "GPUL", visible = False, size = (600, 475)), 
+        sg.Column(layoutStorage, key = "StorageL", visible = False, size = (600, 475)), 
+        sg.Column(layoutNetwork, key = "NetworkL", visible = False, size = (600, 475))
+    ],
+
+    [
+        sg.Frame("", layout = [
+            [
+                sg.B("", image_filename = "images/github.png", image_size = (26, 26), border_width = 0, button_color = WindowBackgroundColor, mouseover_colors = WindowBackgroundColor, key = "-github-"),
+                sg.B("", image_filename = "images/settings.png", image_size = (26, 26), border_width = 0, button_color = WindowBackgroundColor, mouseover_colors = WindowBackgroundColor, key = "-settings-"),
+                sg.B("", image_filename = "images/exit.png", image_size = (26, 26), border_width = 0, button_color = WindowBackgroundColor, mouseover_colors = WindowBackgroundColor, key='-exit-')
+            ]
+        ],
+        size = (600, 50),
+        relief="flat",
+        background_color= WindowBackgroundColor,
+        element_justification="right")
     ]
 ]
