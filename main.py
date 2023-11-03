@@ -1,6 +1,6 @@
 import PySimpleGUI as sg
 from layouts import *
-import webbrowser
+from webbrowser import open
 
 window = sg.Window('System Monitor', layout, size = (600, 600), background_color = WindowBackgroundColor, icon = "images/icon.ico", element_justification = "center", no_titlebar = False, grab_anywhere = True)
 
@@ -19,7 +19,9 @@ while True:
     if event == sg.WIN_CLOSED or event == 'Exit' or event == "-exit-":
         break
     if event == "-github-":
-        webbrowser.open("https://github.com/meriusss", new = 2)
+        open("https://github.com/meriusss/system-monitor", new = 2)
+    if event == "-settings-":
+        pass
     if event == "CPU":
         Change_Layout("CPUL")
     if event == "Memory":
@@ -31,5 +33,11 @@ while True:
     if event == "Network":
         Change_Layout("NetworkL")
 
+    CPUUsage = Get_CPU_Usage()
+    Uptime = Get_System_Uptime()
+
+    window["-CPU-PROGRESS-"].UpdateBar(current_count = CPUUsage)
+    window["-CPU-PROGRESS-PERCENT-"].update(str(CPUUsage) + "%")
+    window["-UPTIME-"].update(Uptime)
         
 window.close()

@@ -38,7 +38,15 @@ layoutCPU = [
     [
         sg.Frame("", layout = [
             [
-                sg.Text("CPU Activity")
+                sg.Text("CPU Usage"),
+                sg.Push(),
+                sg.ProgressBar(max_value= 100, orientation = "h",size_px = (400, 20), key = "-CPU-PROGRESS-", bar_color= (ButtonColorActive, WindowBackgroundColor), style="clam"),
+                sg.Text("", key = "-CPU-PROGRESS-PERCENT-")
+            ],
+            [   
+                sg.Text("System Uptime"),
+                sg.Push(),
+                sg.Text("", key = "-UPTIME-")
             ]
         ],
         size = (555, 232))
