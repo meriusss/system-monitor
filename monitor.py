@@ -31,5 +31,3 @@ def Get_Total_Available_Memory(unit):
         return str(round(psutil.virtual_memory().total / 1024 / 1024)) + " " + unit
     else: 
         return str(round(psutil.virtual_memory().total / 1024 / 1024 / 1024, 2)) + " " + unit
-    
-print(Get_System_Uptime())
