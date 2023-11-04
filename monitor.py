@@ -21,13 +21,9 @@ def Get_CPU_Architecture():
 def Get_System_Uptime():
     TimeSinceBootSeconds = int(time.time()) - int(psutil.boot_time())
     TimeSinceBootReadable = datetime.timedelta(seconds = TimeSinceBootSeconds)
-
     return TimeSinceBootReadable
 
-def Get_Total_Available_Memory(unit):
-    if unit == "GB":
-        return str(round(psutil.virtual_memory().total / 1024 / 1024 / 1024, 2)) + " " + unit
-    elif unit == "MB":
-        return str(round(psutil.virtual_memory().total / 1024 / 1024)) + " " + unit
-    else: 
-        return str(round(psutil.virtual_memory().total / 1024 / 1024 / 1024, 2)) + " " + unit
+def Get_Memory_Info():
+    #total, free, used, util%
+    Memory = psutil.virtual_memory()
+    return str(round(Memory.total / 1024 / 1024 / 1024, 2)) + " " + "GB", str(round(Memory.used / 1024 / 1024 / 1024, 2)) + " " + "GB", str(round(Memory.free / 1024 / 1024 / 1024, 2)) + " " + "GB", Memory.percent

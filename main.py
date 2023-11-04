@@ -1,8 +1,9 @@
-import PySimpleGUI as sg
-from layouts import *
 from webbrowser import open
+from PySimpleGUI import theme
+theme("LightBrown1")
+from layouts import *
 
-window = sg.Window('System Monitor', layout, size = (600, 600), background_color = WindowBackgroundColor, icon = "images/icon.ico", element_justification = "center", no_titlebar = False, grab_anywhere = True)
+window = sg.Window('System Monitor', layout, size = (600, 600), icon = "images/icon.ico", element_justification = "center", no_titlebar = False, grab_anywhere = True)
 
 layout = "CPUL"
 
@@ -35,9 +36,14 @@ while True:
 
     CPUUsage = Get_CPU_Usage()
     Uptime = Get_System_Uptime()
+    Memory = Get_Memory_Info()
 
     window["-CPU-PROGRESS-"].UpdateBar(current_count = CPUUsage)
     window["-CPU-PROGRESS-PERCENT-"].update(str(CPUUsage) + "%")
     window["-UPTIME-"].update(Uptime)
+    window["-USED-MEMORY-"].update(Memory[1])
+    window["-FREE-MEMORY-"].update(Memory[2])
+    window["-MEMORY-PROGRESS-"].UpdateBar(current_count = Memory[3])
+    window["-MEMORY-PROGRESS-PERCENT-"].update(str(Memory[3]) + "%")
         
 window.close()
