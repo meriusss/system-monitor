@@ -1,6 +1,5 @@
 from webbrowser import open
-from PySimpleGUI import theme
-theme("LightBrown1")
+import theme
 from layouts import *
 
 window = sg.Window('System Monitor', layout, size = (600, 600), icon = "images/icon.ico", element_justification = "center", no_titlebar = False, grab_anywhere = True)
@@ -22,7 +21,7 @@ while True:
     if event == "-github-":
         open("https://github.com/meriusss/system-monitor", new = 2)
     if event == "-settings-":
-        pass
+        SettingsPopup()
     if event == "CPU":
         Change_Layout("CPUL")
     if event == "Memory":
