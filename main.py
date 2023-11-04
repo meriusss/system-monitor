@@ -38,6 +38,9 @@ while True:
     Memory = Get_Memory_Info()
     Gpu = Get_Nvidia_GPU_Info()
     Drives = Get_Storage_Info()
+    if Gpu[5] < 10:
+        GpuPercent = "0" + str(Gpu[5]) + "%"
+    else: GpuPercent = str(Gpu[5]) + "%"
 
     window["-CPU-PROGRESS-"].UpdateBar(current_count = CPUUsage)
     window["-CPU-PROGRESS-PERCENT-"].update(str(CPUUsage) + "%")
@@ -49,7 +52,7 @@ while True:
     window["-GPU-USED-MEMORY-"].update(Gpu[2])
     window["-GPU-FREE-MEMORY-"].update(Gpu[3])
     window["-GPU-LOAD-PROGRESS-"].UpdateBar(current_count = Gpu[5])
-    window["-GPU-LOAD-PERCENT-"].update(str(Gpu[5]) + "%")
+    window["-GPU-LOAD-PERCENT-"].update(GpuPercent)
     window["-GPU-MEMORY-PROGRESS-"].UpdateBar(current_count = Gpu[4])
     window["-GPU-MEMORY-PERCENT-"].update(Gpu[4] + "%")
     

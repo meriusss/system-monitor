@@ -16,9 +16,6 @@ def Component_Data_Layout_Dynamic(Title, Key):
 def Component_Data_Layout_ProgressBar(Title, ProgressBarKey, PercentKey):
     return [sg.Text(Title), sg.Push(), sg.ProgressBar(max_value= 100, orientation = "h",size_px = (380, 20), key = ProgressBarKey), sg.Text("", key = PercentKey)]
 
-def Component_Data_Layout_ProgressBar_V(Title, ProgressBarKey, PercentKey):
-    return [sg.Text(Title), sg.ProgressBar(max_value= 100, orientation = "v", size_px = (232, 20), key = ProgressBarKey), sg.Text("", key = PercentKey)]
-
 def Storage_Layout():
     layout = []
     TotalStorage = 0
@@ -67,9 +64,10 @@ def SettingsPopup():
 
 ButtonLayout = [Navigation_Button("CPU"), Navigation_Button("Memory"), Navigation_Button("GPU"), Navigation_Button("Storage"), Navigation_Button("Network")]
 
-GPULayout = Component_Data_Layout_ProgressBar_V("Load", "-GPU-LOAD-PROGRESS-", "-GPU-LOAD-PERCENT-")
-GPULayout.append(sg.Push())
-GPULayout.extend(Component_Data_Layout_ProgressBar_V("Memory Usage", "-GPU-MEMORY-PROGRESS-", "-GPU-MEMORY-PERCENT-"))
+GPULayout = []
+GPULayout.append(Component_Data_Layout_ProgressBar("Load", "-GPU-LOAD-PROGRESS-", "-GPU-LOAD-PERCENT-"))
+GPULayout.append([sg.HorizontalSeparator()])
+GPULayout.append(Component_Data_Layout_ProgressBar("Memory Usage", "-GPU-MEMORY-PROGRESS-", "-GPU-MEMORY-PERCENT-"))
 
 StorageLayout = Storage_Layout()
 
@@ -137,7 +135,7 @@ layoutGPU = [
     ],
 
     [
-        sg.Frame("", layout = [GPULayout],
+        sg.Frame("", layout = GPULayout,
         size = (555, 232))
     ]
 ]

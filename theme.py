@@ -1,2 +1,2 @@
 from PySimpleGUI import theme
-theme('DarkPurple7')
+theme('Reds')
