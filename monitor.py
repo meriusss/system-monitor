@@ -3,6 +3,7 @@ import cpuinfo
 import time
 import datetime
 import GPUtil
+import wmi
 
 def Get_CPU_Name():
     return cpuinfo.get_cpu_info()['brand_raw']
@@ -33,3 +34,12 @@ def Get_Nvidia_GPU_Info():
     #name, total memory, used memory, free memory, util%, load
     gpu = GPUtil.getGPUs()[0]
     return gpu.name, str(round(gpu.memoryTotal / 1024, 2)) + " GB", str(round(gpu.memoryUsed / 1024, 2)) + " GB", str(round(gpu.memoryFree / 1024, 2)) + " GB", str(round(gpu.memoryUtil * 100, 1)), round(float(gpu.load * 100), 1)
+
+def Get_Storage_Info():
+    #drive letter, total storage, used storage, free storage, storage%
+    partitions = psutil.disk_partitions(True)
+    drives = []
+    for partion in partitions:
+        drive = psutil.disk_usage(partion.device)
+        drives.append([partion.device, drive.total, drive.used, drive.free, drive.percent])
+    return drives

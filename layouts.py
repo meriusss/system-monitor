@@ -2,6 +2,7 @@ import PySimpleGUI as sg
 from monitor import *
 
 Gpu = Get_Nvidia_GPU_Info()
+Drives = Get_Storage_Info()
 
 def Navigation_Button(title):
     return sg.Button(title, size = (12,2), tooltip = title, border_width = 0)
@@ -17,6 +18,26 @@ def Component_Data_Layout_ProgressBar(Title, ProgressBarKey, PercentKey):
 
 def Component_Data_Layout_ProgressBar_V(Title, ProgressBarKey, PercentKey):
     return [sg.Text(Title), sg.ProgressBar(max_value= 100, orientation = "v", size_px = (232, 20), key = ProgressBarKey), sg.Text("", key = PercentKey)]
+
+def Storage_Layout():
+    layout = []
+    TotalStorage = 0
+    DriveNumber = 0
+    for drive in Drives:
+        TotalStorage += drive[1]
+        layout.append(Component_Data_Layout("Drive", drive[0]))
+        layout.append(Component_Data_Layout("Total Storage Capacity", str(round(drive[1] / 1024 / 1024 / 1024, 2)) + " GB"))
+        layout.append(Component_Data_Layout_Dynamic("Used Storage", "-USED-STORAGE{}-".format(DriveNumber)))
+        layout.append(Component_Data_Layout_Dynamic("Free Storage", "-FREE-STORAGE{}-" .format(DriveNumber)))
+        layout.append([sg.HorizontalSeparator()])
+        DriveNumber += 1
+    layout.insert(0, Component_Data_Layout("Total Capacity(All Drives)", str(round(TotalStorage / 1024 / 1024 / 1024, 2)) + " GB"))
+    layout.insert(1, [sg.HorizontalSeparator()])
+    DriveNumber = 0
+    for drive in Drives:
+        layout.append(Component_Data_Layout_ProgressBar("{} Drive Usage".format(drive[0]), "-STORAGE-PROGRESS{}-".format(DriveNumber), "-STORAGE-PERCENT{}-".format(DriveNumber)))
+        DriveNumber += 1
+    return layout
 
 def SettingsPopup():
     layout = [
@@ -49,6 +70,8 @@ ButtonLayout = [Navigation_Button("CPU"), Navigation_Button("Memory"), Navigatio
 GPULayout = Component_Data_Layout_ProgressBar_V("Load", "-GPU-LOAD-PROGRESS-", "-GPU-LOAD-PERCENT-")
 GPULayout.append(sg.Push())
 GPULayout.extend(Component_Data_Layout_ProgressBar_V("Memory Usage", "-GPU-MEMORY-PROGRESS-", "-GPU-MEMORY-PERCENT-"))
+
+StorageLayout = Storage_Layout()
 
 NavigationLayout = sg.Frame(
             title = "",
@@ -121,17 +144,11 @@ layoutGPU = [
 
 layoutStorage = [
     [   
-        sg.Frame("", layout = [
-            
-        ],
-        size = (555, 232))
-    ],
-
-    [
-        sg.Frame("", layout = [
-            
-        ],
-        size = (555, 232))
+        sg.Frame("", 
+        layout = 
+            StorageLayout
+        ,
+        size = (555, 464))
     ]
 ]
 

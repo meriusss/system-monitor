@@ -37,6 +37,7 @@ while True:
     Uptime = Get_System_Uptime()
     Memory = Get_Memory_Info()
     Gpu = Get_Nvidia_GPU_Info()
+    Drives = Get_Storage_Info()
 
     window["-CPU-PROGRESS-"].UpdateBar(current_count = CPUUsage)
     window["-CPU-PROGRESS-PERCENT-"].update(str(CPUUsage) + "%")
@@ -51,5 +52,14 @@ while True:
     window["-GPU-LOAD-PERCENT-"].update(str(Gpu[5]) + "%")
     window["-GPU-MEMORY-PROGRESS-"].UpdateBar(current_count = Gpu[4])
     window["-GPU-MEMORY-PERCENT-"].update(Gpu[4] + "%")
+    
+    DriveNumber = 0
+
+    for drive in Drives:
+        window["-USED-STORAGE{}-".format(DriveNumber)].update(str(round(drive[2] / 1024 / 1024 / 1024, 2)))
+        window["-FREE-STORAGE{}-".format(DriveNumber)].update(str(round(drive[3] / 1024 / 1024 / 1024, 2)))
+        window["-STORAGE-PROGRESS{}-".format(DriveNumber)].UpdateBar(current_count = drive[4])
+        window["-STORAGE-PERCENT{}-".format(DriveNumber)].update(str(drive[4]) + "%")
+        DriveNumber += 1
         
 window.close()
