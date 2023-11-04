@@ -1,6 +1,6 @@
 from webbrowser import open
 from PySimpleGUI import theme
-theme("LightBrown2")
+theme("LightBrown1")
 from layouts import *
 
 window = sg.Window('System Monitor', layout, size = (600, 600), icon = "images/icon.ico", element_justification = "center", no_titlebar = False, grab_anywhere = True)
@@ -37,6 +37,7 @@ while True:
     CPUUsage = Get_CPU_Usage()
     Uptime = Get_System_Uptime()
     Memory = Get_Memory_Info()
+    Gpu = Get_Nvidia_GPU_Info()
 
     window["-CPU-PROGRESS-"].UpdateBar(current_count = CPUUsage)
     window["-CPU-PROGRESS-PERCENT-"].update(str(CPUUsage) + "%")
@@ -45,5 +46,11 @@ while True:
     window["-FREE-MEMORY-"].update(Memory[2])
     window["-MEMORY-PROGRESS-"].UpdateBar(current_count = Memory[3])
     window["-MEMORY-PROGRESS-PERCENT-"].update(str(Memory[3]) + "%")
+    window["-GPU-USED-MEMORY-"].update(Gpu[2])
+    window["-GPU-FREE-MEMORY-"].update(Gpu[3])
+    window["-GPU-LOAD-PROGRESS-"].UpdateBar(current_count = Gpu[5])
+    window["-GPU-LOAD-PERCENT-"].update(str(Gpu[5]) + "%")
+    window["-GPU-MEMORY-PROGRESS-"].UpdateBar(current_count = Gpu[4])
+    window["-GPU-MEMORY-PERCENT-"].update(Gpu[4] + "%")
         
 window.close()
