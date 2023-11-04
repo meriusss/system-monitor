@@ -2,6 +2,7 @@ import psutil
 import cpuinfo
 import time
 import datetime
+import GPUtil
 
 def Get_CPU_Name():
     return cpuinfo.get_cpu_info()['brand_raw']
@@ -27,3 +28,8 @@ def Get_Memory_Info():
     #total, free, used, util%
     Memory = psutil.virtual_memory()
     return str(round(Memory.total / 1024 / 1024 / 1024, 2)) + " " + "GB", str(round(Memory.used / 1024 / 1024 / 1024, 2)) + " " + "GB", str(round(Memory.free / 1024 / 1024 / 1024, 2)) + " " + "GB", Memory.percent
+
+def Get_Nvidia_GPU_Info():
+    #name, total memory, used memory, free memory, util%, load
+    gpu = GPUtil.getGPUs()[0]
+    return gpu.name, gpu.memoryTotal, gpu.memoryUsed, gpu.memoryFree, str(round(gpu.memoryUtil, 2)), gpu.load

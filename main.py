@@ -1,6 +1,6 @@
 from webbrowser import open
 from PySimpleGUI import theme
-theme("LightBrown1")
+theme("LightBrown2")
 from layouts import *
 
 window = sg.Window('System Monitor', layout, size = (600, 600), icon = "images/icon.ico", element_justification = "center", no_titlebar = False, grab_anywhere = True)
