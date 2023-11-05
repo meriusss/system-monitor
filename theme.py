@@ -1,2 +1,2 @@
 from PySimpleGUI import theme
-theme('Reds')
+theme('Kayak')

@@ -47,13 +47,16 @@ def SettingsPopup():
         if event == "Exit" or event == sg.WIN_CLOSED:
             break
         if event == "Confirm":
-            theme = open("theme.py", "r")
-            lines = theme.readlines()
-            theme.close()
-            theme = open("theme.py", "w")
-            theme.truncate()
-            theme.writelines(lines[:-1])
-            theme.write("theme('{}')".format(values['-THEME-LIST-'][0]))
-            break
+            if values["-THEME-LIST-"] != []:
+                theme = open("theme.py", "r")
+                lines = theme.readlines()
+                theme.close()
+                theme = open("theme.py", "w")
+                theme.truncate()
+                theme.writelines(lines[:-1])
+                theme.write("theme('{}')".format(values['-THEME-LIST-'][0]))
+                break
+            else: 
+                break
     
     window.close()

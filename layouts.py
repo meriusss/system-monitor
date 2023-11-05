@@ -90,17 +90,12 @@ layoutStorage = [
 layoutNetwork = [
     [   
         sg.Frame("", layout = [
-            
+            # Component_Data_Layout_Dynamic("Download Speed", "-DOWNLOAD-SPEED-"),
+            # [sg.HorizontalSeparator()],
+            # Component_Data_Layout_Dynamic("Upload Speed", "-UPLOAD-SPEED-")
         ],
         size = (555, 232))
     ],
-
-    [
-        sg.Frame("", layout = [
-            
-        ],
-        size = (555, 232))
-    ]
 ]
 
 layout = [

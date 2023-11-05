@@ -38,6 +38,8 @@ while True:
     Memory = Get_Memory_Info()
     Gpu = Get_Nvidia_GPU_Info()
     Drives = Get_Storage_Info()
+    # DownloadSpeed = Get_Download_Speed()
+    # UploadSpeed = Get_Upload_Speed()
     if Gpu[5] < 10:
         GpuPercent = "0" + str(Gpu[5]) + "%"
     else: GpuPercent = str(Gpu[5]) + "%"
@@ -55,7 +57,9 @@ while True:
     window["-GPU-LOAD-PERCENT-"].update(GpuPercent)
     window["-GPU-MEMORY-PROGRESS-"].UpdateBar(current_count = Gpu[4])
     window["-GPU-MEMORY-PERCENT-"].update(Gpu[4] + "%")
-    
+    # window["-DOWNLOAD-SPEED-"].update(str(DownloadSpeed) + "Mbps")
+    # window["-UPLOAD-SPEED-"].update(str(UploadSpeed) + "Mbps")
+
     DriveNumber = 0
 
     for drive in Drives:

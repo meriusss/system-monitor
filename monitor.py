@@ -3,7 +3,6 @@ import cpuinfo
 import time
 import datetime
 import GPUtil
-import wmi
 
 def Get_CPU_Name():
     return cpuinfo.get_cpu_info()['brand_raw']
@@ -43,3 +42,18 @@ def Get_Storage_Info():
         drive = psutil.disk_usage(partion.device)
         drives.append([partion.device, drive.total, drive.used, drive.free, drive.percent])
     return drives
+def Get_Download_Speed():
+    value = psutil.net_io_counters().bytes_recv
+    time.sleep(0.1)
+    last_value = value
+    value = psutil.net_io_counters().bytes_recv
+    # print(round((value - last_value) / 1024 / 1024 * 8 * 10, 2))
+    return round((value - last_value) / 1024 / 1024 * 8 * 10, 2)
+        
+def Get_Upload_Speed():
+    value = psutil.net_io_counters().bytes_sent
+    time.sleep(0.1)
+    last_value = value
+    value = psutil.net_io_counters().bytes_sent
+    # print(round((value - last_value) / 1024 / 1024 * 8, 2))
+    return round((value - last_value) / 1024 / 1024 * 8 * 10, 2)
