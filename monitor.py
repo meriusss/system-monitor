@@ -42,6 +42,7 @@ def Get_Storage_Info():
         drive = psutil.disk_usage(partion.device)
         drives.append([partion.device, drive.total, drive.used, drive.free, drive.percent])
     return drives
+
 def Get_Download_Speed():
     value = psutil.net_io_counters().bytes_recv
     time.sleep(0.1)
