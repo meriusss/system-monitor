@@ -40,10 +40,10 @@ class Memory:
         return round(memory.used / 1024 / 1024 / 1024, 2)
     
     def get_free_memory(self):
-        return round(self.Total - self.get_used_memory(), 2)
+        return round(self.total - self.get_used_memory(), 2)
     
     def get_memory_usage(self):
-        return round((self.Total - self.get_free_memory()) / self.Total * 100 , 1)
+        return round((self.total - self.get_free_memory()) / self.total * 100 , 1)
     
 class GPU:
     def __init__(self):
