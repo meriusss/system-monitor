@@ -1,60 +1,87 @@
 import psutil
 import cpuinfo
+import platform
 import time
 import datetime
 import GPUtil
 
-def Get_CPU_Name():
-    return cpuinfo.get_cpu_info()['brand_raw']
+class CPU:
+    def __init__(self):
+        cpuInfo = cpuinfo.get_cpu_info()
+        self.name = cpuInfo['brand_raw']
+        self.cores = psutil.cpu_count(False)
+        self.logical_cores = psutil.cpu_count()
+        self.base_frequency = round(float(cpuInfo["hz_advertised_friendly"].replace(" GHz", "")), 2)
+        self.architecture = cpuInfo["arch"]
+    
+    @staticmethod
+    def get_usage():
+        return psutil.cpu_percent()
 
-def Get_CPU_Cores(logical = False):
-    return psutil.cpu_count(logical)
+class System:
+    def __init__(self):
+        self.name = platform.system()
+        self.release = platform.release()
+        self.version = platform.version()
 
-def Get_CPU_Usage():
-    return psutil.cpu_percent(interval= 0.1)
+    @staticmethod
+    def get_uptime():
+        timeSinceBootSeconds = int(time.time()) - int(psutil.boot_time())
+        timeSinceBootReadable = datetime.timedelta(seconds = timeSinceBootSeconds)
+        return timeSinceBootReadable
+    
+class Memory:
+    def __init__(self):
+        memory = psutil.virtual_memory()
+        self.total = round(memory.total / 1024 / 1024 / 1024, 2)
 
-def Get_CPU_Base_Freq():
-    return str(round(float(cpuinfo.get_cpu_info()["hz_advertised_friendly"].replace(" GHz", "")), 2)) + " GHz"
+    def get_used_memory(self):
+        memory = psutil.virtual_memory()
+        return round(memory.used / 1024 / 1024 / 1024, 2)
+    
+    def get_free_memory(self):
+        return round(self.Total - self.get_used_memory(), 2)
+    
+    def get_memory_usage(self):
+        return round((self.Total - self.get_free_memory()) / self.Total * 100 , 1)
+    
+class GPU:
+    def __init__(self):
+        self.check_gpu()
 
-def Get_CPU_Architecture():
-    return cpuinfo.get_cpu_info()["arch"]
-
-def Get_System_Uptime():
-    TimeSinceBootSeconds = int(time.time()) - int(psutil.boot_time())
-    TimeSinceBootReadable = datetime.timedelta(seconds = TimeSinceBootSeconds)
-    return TimeSinceBootReadable
-
-def Get_Memory_Info():
-    #total, free, used, util%
-    Memory = psutil.virtual_memory()
-    return str(round(Memory.total / 1024 / 1024 / 1024, 2)) + " GB", str(round(Memory.used / 1024 / 1024 / 1024, 2)) + " GB", str(round(Memory.free / 1024 / 1024 / 1024, 2)) + " GB", Memory.percent
-
-def Get_Nvidia_GPU_Info():
-    #name, total memory, used memory, free memory, util%, load
-    gpu = GPUtil.getGPUs()[0]
-    return gpu.name, str(round(gpu.memoryTotal / 1024, 2)) + " GB", str(round(gpu.memoryUsed / 1024, 2)) + " GB", str(round(gpu.memoryFree / 1024, 2)) + " GB", str(round(gpu.memoryUtil * 100, 1)), round(float(gpu.load * 100), 1)
-
-def Get_Storage_Info():
-    #drive letter, total storage, used storage, free storage, storage%
-    partitions = psutil.disk_partitions(True)
-    drives = []
-    for partion in partitions:
-        drive = psutil.disk_usage(partion.device)
-        drives.append([partion.device, drive.total, drive.used, drive.free, drive.percent])
-    return drives
-
-def Get_Download_Speed():
-    value = psutil.net_io_counters().bytes_recv
-    time.sleep(0.1)
-    last_value = value
-    value = psutil.net_io_counters().bytes_recv
-    # print(round((value - last_value) / 1024 / 1024 * 8 * 10, 2))
-    return round((value - last_value) / 1024 / 1024 * 8 * 10, 2)
+    def check_gpu(self):
+        try: 
+            GPUtil.getGPUs()
+        except:
+            self.gpu = "Unknown GPU"
+            return self.gpu
+        else:
+            self.gpu = GPUtil.getGPUs()[0]
+            self.name = self.gpu.name
+            self.total_memory = round(self.gpu.memoryTotal / 1024, 2)
         
-def Get_Upload_Speed():
-    value = psutil.net_io_counters().bytes_sent
-    time.sleep(0.1)
-    last_value = value
-    value = psutil.net_io_counters().bytes_sent
-    # print(round((value - last_value) / 1024 / 1024 * 8, 2))
-    return round((value - last_value) / 1024 / 1024 * 8 * 10, 2)
+    def get_used_memory(self):
+        return round(self.gpu.memoryUsed / 1024, 2) 
+
+    def get_free_memory(self):
+        return round(self.gpu.memoryFree / 1024, 2)
+
+    def get_memory_usage(self):
+        return round(self.gpu.memoryUtil * 100, 1)
+        
+    def get_load(self):
+        return round(self.gpu.load * 100, 1)
+    
+class Storage():
+    @staticmethod
+    def get_drives():
+        partitions = psutil.disk_partitions()
+        drives = []
+        for partion in partitions:
+            drive = psutil.disk_usage(partion.device)
+            drives.append([partion.device, 
+                           round(drive.total / 1024 / 1024 / 1024, 2), 
+                           round(drive.used / 1024 / 1024 / 1024, 2), 
+                           round(drive.free / 1024 / 1024 / 1024, 2), 
+                           drive.percent])
+        return drives
