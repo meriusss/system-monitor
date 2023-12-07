@@ -52,6 +52,7 @@ class GPU:
     def check_gpu(self):
         try: 
             GPUtil.getGPUs()
+            self.gpu = GPUtil.getGPUs()[0]
         except:
             self.gpu = "Unknown GPU"
             return self.gpu
