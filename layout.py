@@ -56,16 +56,14 @@ class Layout:
 
         self.Storage_Layout()
 
-        self.customLayout = [
-            [sg.Text("Placeholder")]
-        ]
+        self.Graph_Layout()
 
         self.navigationLayout = [
             self.Navigation_Button("CPU/System"), 
             self.Navigation_Button("Memory"), 
             self.Navigation_Button("GPU"), 
             self.Navigation_Button("Storage"), 
-            self.Navigation_Button("Custom")
+            self.Navigation_Button("Graphs")
         ]
 
         self.mainLayout = [
@@ -73,7 +71,7 @@ class Layout:
             sg.Column(self.memoryLayout, key = "-memory-layout-", visible = False, size = (600, 480)), 
             sg.Column(self.gpuLayout, key = "-gpu-layout-", visible = False, size = (600, 480)),
             sg.Column(self.storageLayout, key = "-storage-layout-", visible = False, size = (600, 480)), 
-            sg.Column(self.customLayout, key = "-custom-layout-", visible = False, size = (600, 480))
+            sg.Column(self.graphsLayout, key = "-graphs-layout-", visible = False, size = (600, 480))
         ]
 
         self.footerLayout = sg.Frame("",layout = [[
@@ -103,7 +101,9 @@ class Layout:
             [sg.HorizontalSeparator()],
             self.Component_Data_Layout("Used Memory", "-GPU-USED-MEMORY-"),
             [sg.HorizontalSeparator()],
-            self.Component_Data_Layout("Free Memory", "-GPU-FREE-MEMORY-")
+            self.Component_Data_Layout("Free Memory", "-GPU-FREE-MEMORY-"),
+            [sg.HorizontalSeparator()],
+            self.Component_Data_Layout("Temperature", "-GPU-TEMPERATURE-")
             ],
             size = (555, 232))
             ],
@@ -153,6 +153,16 @@ class Layout:
         with open(themefile ,"r") as file:
             self.theme = json.load(file)["theme"]
             sg.theme(self.theme)
+    
+    def Graph_Layout(self):
+        GRAPH_SIZE = (540, 200)
+
+        self.graphsLayout = [
+            [sg.Text("Memory usage graph")],
+            [sg.Push(), sg.Graph(GRAPH_SIZE, (0,0), GRAPH_SIZE, key = "-memory-graph-", background_color=sg.theme_button_color_background()), sg.Push()],
+            [sg.Text("60 seconds")],
+            [sg.HorizontalSeparator()]
+        ]
 
     @staticmethod
     def Navigation_Button(Title):

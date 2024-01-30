@@ -52,7 +52,6 @@ class GPU:
     def check_gpu(self):
         try: 
             GPUtil.getGPUs()
-            self.gpu = GPUtil.getGPUs()[0]
         except:
             self.gpu = "Unknown GPU"
             return self.gpu
@@ -65,13 +64,16 @@ class GPU:
         return round(self.gpu.memoryUsed / 1024, 2) 
 
     def get_free_memory(self):
-        return round(self.gpu.memoryFree / 1024, 2)
+        return round((self.gpu.memoryTotal - self.gpu.memoryUsed) / 1024, 2)
 
     def get_memory_usage(self):
         return round(self.gpu.memoryUtil * 100, 1)
         
     def get_load(self):
         return round(self.gpu.load * 100, 1)
+    
+    def get_temperature(self):
+        return self.gpu.temperature
     
 class Storage():
     @staticmethod
@@ -86,3 +88,6 @@ class Storage():
                            round(drive.free / 1024 / 1024 / 1024, 2), 
                            drive.percent])
         return drives
+    
+gpu = GPU()
+

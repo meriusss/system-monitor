@@ -20,13 +20,18 @@ class GUI:
             "Memory":"-memory-layout-",
             "GPU":"-gpu-layout-",
             "Storage":"-storage-layout-",
-            "Custom":"-custom-layout-"
+            "Graphs":"-graphs-layout-"
         }
         self.footerDictionary = {
             "-settings-": self.open_settings_window,
             "-github-": self.open_github
         }
         self.currentLayout = "-cpu-layout-"
+        self.graphX = 0
+        self.graphY = 0
+        self.lastGraphX = 0
+        self.lastGraphY = 0
+        self.graphStepSize = 9
 
     @staticmethod
     def open_github():
@@ -114,6 +119,7 @@ class GUI:
         usedMemory = self.memory.get_used_memory()
         freeMemory = self.memory.get_free_memory()
         memoryUsage = self.memory.get_memory_usage()
+        storage = monitor.Storage.get_drives()
         
         dynamicDictionary = {
             "-CPU-BAR-": cpuUsage,
@@ -130,19 +136,20 @@ class GUI:
             gpuFreeMemory = self.gpu.get_free_memory()
             gpuMemoryUsage = self.gpu.get_memory_usage()
             gpuLoad = self.gpu.get_load()
-            self.storage = monitor.Storage.get_drives()
+            gpuTemp = self.gpu.get_temperature()
             gpuDictionary = {
                 "-GPU-USED-MEMORY-":f"{gpuUsedMemory} GB",
                 "-GPU-FREE-MEMORY-":f"{gpuFreeMemory} GB",
                 "-GPU-LOAD-BAR-": gpuLoad,
                 "-GPU-LOAD-PERCENT-":f"{gpuLoad} %",
                 "-GPU-MEMORY-BAR-":gpuMemoryUsage,
-                "-GPU-MEMORY-PERCENT-":f"{gpuLoad} %"
+                "-GPU-MEMORY-PERCENT-":f"{gpuMemoryUsage} %",
+                "-GPU-TEMPERATURE-":f"{gpuTemp} °C"
             }
             dynamicDictionary.update(gpuDictionary)
 
-        for drive in self.storage:
-            index = self.storage.index(drive)
+        for drive in storage:
+            index = storage.index(drive)
             dynamicDictionary.update({f"-USED-STORAGE{index}-": f"{drive[2]} GB",
                                       f"-FREE-STORAGE{index}-": f"{drive[3]} GB",
                                       f"-STORAGE-{index}-BAR-": drive[4],
@@ -150,6 +157,17 @@ class GUI:
             
         for key in dynamicDictionary:
             self.window[key].update(dynamicDictionary[key])
+
+        if self.graphX < 540:
+            self.window["-memory-graph-"].DrawLine((self.lastGraphX, self.lastGraphY,), (self.graphX, memoryUsage * 2), width=2)
+        else:
+            self.window["-memory-graph-"].Move(-self.graphStepSize, 0)
+            self.window["-memory-graph-"].DrawLine((self.lastGraphX, self.lastGraphY,), (self.graphX, memoryUsage * 2), width=2)
+            self.graphX = self.graphX - self.graphStepSize
+        self.lastGraphX, self.lastGraphY = (self.graphX, memoryUsage * 2)
+        self.graphX += self.graphStepSize
+
+        
 
     def main_loop(self):
         self.initialize_window()
