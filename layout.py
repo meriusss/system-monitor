@@ -158,10 +158,12 @@ class Layout:
         GRAPH_SIZE = (540, 200)
 
         self.graphsLayout = [
+            [sg.Text("CPU usage graph")],
+            [sg.Push(), sg.Graph(GRAPH_SIZE, (0,0), GRAPH_SIZE, key = "-cpu-graph-", background_color=sg.theme_button_color_background()), sg.Push()],
+            [sg.HorizontalSeparator()],
             [sg.Text("Memory usage graph")],
             [sg.Push(), sg.Graph(GRAPH_SIZE, (0,0), GRAPH_SIZE, key = "-memory-graph-", background_color=sg.theme_button_color_background()), sg.Push()],
-            [sg.Text("60 seconds")],
-            [sg.HorizontalSeparator()]
+            [sg.Text("60 seconds")]
         ]
 
     @staticmethod

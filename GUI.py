@@ -30,7 +30,8 @@ class GUI:
         self.graphX = 0
         self.graphY = 0
         self.lastGraphX = 0
-        self.lastGraphY = 0
+        self.lastMemoryGraphY = 0
+        self.lastCPUGraphY = 0
         self.graphStepSize = 9
 
     @staticmethod
@@ -78,6 +79,13 @@ class GUI:
             self.change_layout(self.layoutDictionary[self.event])
         elif self.event in self.footerDictionary:
             self.footerDictionary[self.event]()
+    
+    def draw_graph_lines(self):
+        values = [50, 100, 150]
+        for value in values:
+            self.window["-memory-graph-"].DrawLine((0, value), (540, value), width=1)
+            self.window["-cpu-graph-"].DrawLine((0, value), (540, value), width=1)
+
 
     def initialize_window(self):
         constantDictionary = {
@@ -112,6 +120,8 @@ class GUI:
         
         for key in constantDictionary:
             self.window[key].update(constantDictionary[key])
+        self.draw_graph_lines()
+        
 
     def update_window(self):
         cpuUsage = self.cpu.get_usage()
@@ -159,12 +169,15 @@ class GUI:
             self.window[key].update(dynamicDictionary[key])
 
         if self.graphX < 540:
-            self.window["-memory-graph-"].DrawLine((self.lastGraphX, self.lastGraphY,), (self.graphX, memoryUsage * 2), width=2)
+            self.window["-memory-graph-"].DrawLine((self.lastGraphX, self.lastMemoryGraphY,), (self.graphX, memoryUsage * 2), width=2)
+            self.window["-cpu-graph-"].DrawLine((self.lastGraphX, self.lastCPUGraphY,), (self.graphX, cpuUsage * 2), width=2)
         else:
             self.window["-memory-graph-"].Move(-self.graphStepSize, 0)
-            self.window["-memory-graph-"].DrawLine((self.lastGraphX, self.lastGraphY,), (self.graphX, memoryUsage * 2), width=2)
+            self.window["-cpu-graph-"].Move(-self.graphStepSize, 0)
+            self.window["-memory-graph-"].DrawLine((self.lastGraphX, self.lastMemoryGraphY,), (self.graphX, memoryUsage * 2), width=2)
+            self.window["-cpu-graph-"].DrawLine((self.lastGraphX, self.lastCPUGraphY,), (self.graphX, cpuUsage * 2), width=2)
             self.graphX = self.graphX - self.graphStepSize
-        self.lastGraphX, self.lastGraphY = (self.graphX, memoryUsage * 2)
+        self.lastGraphX, self.lastMemoryGraphY, self.lastCPUGraphY = (self.graphX, memoryUsage * 2, cpuUsage * 2)
         self.graphX += self.graphStepSize
 
         
